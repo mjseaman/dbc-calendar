@@ -1,11 +1,11 @@
 require_relative '../config'
 
-class UpdateCohort < ActiveRecord::Migration
+class RemoveCohortFromBoot < ActiveRecord::Migration
 	def self.up
 		remove_column :boots, :cohort
 	end
 
 	def self.down
-		add_column :boots, :cohort, :integer
+		add_column :boots, :cohort, :string
 	end
 end

@@ -11,9 +11,9 @@ require 'csv'
 class CalendarImporter
 
 	def self.import
+		import_cohorts
 		import_boots
-		# import_cohorts
-		# import_events
+		import_events
 	end
 
 	private
@@ -30,8 +30,6 @@ class CalendarImporter
 		csv_loader("#{File.dirname(__FILE__)}/../db/data/boots.csv").each do |row|
 			row[:cohort] = Cohort.where("name = ?",row[:cohort]).first
 			Boot.new(row).save!
-			puts row.class
-			puts row
 		end
 	end
 
@@ -43,6 +41,11 @@ class CalendarImporter
 
 	def self.import_events
 		csv_loader("#{File.dirname(__FILE__)}/../db/data/events.csv").each do |row|
+			cohort_objects = []
+			row[:cohorts].split(',').each do |cohort_name|
+				cohort_objects << Cohort.where("name = ?",cohort_name).first
+			end
+			row[:cohorts] = cohort_objects
 			Event.new(row).save!
 		end
 	end
